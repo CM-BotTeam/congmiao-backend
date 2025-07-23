@@ -2,10 +2,6 @@ package main
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/pelletier/go-toml
-	"github.com/openai/openai-go"
-	"github.com/openai/openai-go/option"
-	"os"
 )
 
 func main() {
@@ -19,11 +15,9 @@ func main() {
 
 func registerRoutes(app *fiber.App) {
 	app.Get("/", HomeHandler)
-
-	app.Get("/status", func(c *fiber.Ctx) error {
-		return c.JSON(fiber.Map{"status": "running"})
-	})
-	app.Post("/function/aichat", AichatHandler)
+	app.Get("/status", StatusHandler)
+	app.Post("/function/aichat", AiChatHandler)
+	app.Post("/function/aisearch", AiSearchHandler)
 }
 
 func HomeHandler(c *fiber.Ctx) error {
@@ -34,13 +28,35 @@ func HomeHandler(c *fiber.Ctx) error {
 	})
 }
 
-func AichatHandler(c *fiber.Ctx) error {
-	return
+func StatusHandler(c *fiber.Ctx) error {
+	return c.JSON(fiber.Map{
+		"status": "success",
+	})
 }
 
-func AIChat() {
-	client := openai.NewClient(
-		option.WithBaseURL(),
-		option.WithAPIKey(),
-	)
+func AiChatHandler(c *fiber.Ctx) error {
+	var req struct {
+		Query     string `json:"query"`
+		ModelName string `json:"model_name"`
+	}
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "请求体解析失败"})
+	}
+	resp, err := AIChat(req.Query, req.ModelName)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	return c.JSON(fiber.Map{"response": resp})
+}
+
+func AiSearchHandler(c *fiber.Ctx) error {
+	var req AiSearchPayload
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "请求体解析失败"})
+	}
+	resp, err := AISearch(req.Query)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	return c.JSON(fiber.Map{"response": resp})
 }
