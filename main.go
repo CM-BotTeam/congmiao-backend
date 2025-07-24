@@ -6,11 +6,16 @@ import (
 
 func main() {
 	app := fiber.New()
-	registerBackendRoutes(app)
-	registerAIRoutes(app)
-	registerOtogeRoutes(app)
+	registerRoutes(app)
 	err := app.Listen(":3000")
 	if err != nil {
 		return
 	}
+}
+
+func registerRoutes(app *fiber.App) {
+	registerBackendRoutes(app)
+	registerAIRoutes(app)
+	registerOtogeRoutes(app)
+	registerFunctionsRoutes(app)
 }

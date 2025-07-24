@@ -72,3 +72,16 @@ func ShowChunithmSongCover(c *fiber.Ctx) error {
 	coverPath := functions.GetSongCoverPath(songID)
 	return c.SendFile(coverPath, false)
 }
+
+func MarkDownToPicHandler(c *fiber.Ctx) error {
+	var req struct {
+		Markdown string `json:"markdown"`
+	}
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "请求体解析失败"})
+	}
+	if req.Markdown == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Markdown内容不能为空"})
+	}
+	return functions.MarkdownToPic(req.Markdown, c)
+}

@@ -10,12 +10,16 @@ func registerBackendRoutes(app *fiber.App) {
 }
 
 func registerAIRoutes(app *fiber.App) {
-	app.Post("/function/aichat", AiChatHandler)
-	app.Post("/function/aisearch", AiSearchHandler)
+	app.Post("/ai/chat", AiChatHandler)
+	app.Post("/ai/search", AiSearchHandler)
 }
 
 func registerOtogeRoutes(app *fiber.App) {
 	app.Get("/otoge/chunithm/allsong", ShowChunithmAllSong)
 	app.Get("/otoge/chunithm/song/:id", ShowChunithmSongByID)
 	app.Get("/otoge/chunithm/cover/:id", ShowChunithmSongCover)
+}
+
+func registerFunctionsRoutes(app *fiber.App) {
+	app.Post("/functions/md-to-pic", MarkDownToPicHandler)
 }

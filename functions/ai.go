@@ -2,11 +2,12 @@ package functions
 
 import (
 	"context"
+	"os"
+
 	"github.com/gofiber/fiber/v2"
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/openai/openai-go"
 	"github.com/openai/openai-go/option"
-	"os"
 )
 
 func AIChat(query string, ModelName string) (string, error) {
