@@ -1,4 +1,5 @@
 .idea/
 .env
 main.http
-assets/
+assets/otoge
+assets/temp
