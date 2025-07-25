@@ -85,3 +85,11 @@ func MarkDownToPicHandler(c *fiber.Ctx) error {
 	}
 	return functions.MarkdownToPic(req.Markdown, c)
 }
+
+func RandomPicHandler(c *fiber.Ctx) error {
+	folder := c.Params("folder")
+	if folder == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "文件夹名称不能为空"})
+	}
+	return functions.ShowRandomPic(c, folder)
+}

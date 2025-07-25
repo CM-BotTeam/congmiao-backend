@@ -22,4 +22,5 @@ func registerOtogeRoutes(app *fiber.App) {
 
 func registerFunctionsRoutes(app *fiber.App) {
 	app.Post("/functions/md-to-pic", MarkDownToPicHandler)
+	app.Get("/functions/random-pic/:folder", RandomPicHandler)
 }
