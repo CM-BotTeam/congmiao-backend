@@ -18,8 +18,7 @@ func MarkDownToHtml(md string) (string, error) {
 		return "", err
 	}
 	css := string(cssBytes)
-	extra := "" // 可根据需要传入额外的 HTML 字段
-
+	renderer := html.NewRenderer(html.RendererOptions{Flags: html.CommonFlags})
 	htmlContent := fmt.Sprintf(`<!DOCTYPE html>
 <html>
 <head>
@@ -48,8 +47,8 @@ padding: 15px;
 %s
 </article>
 </body>
-%s
-`, css, markdown.ToHTML([]byte(md), parser.NewWithExtensions(parser.CommonExtensions|parser.AutoHeadingIDs), html.NewRenderer(html.RendererOptions{Flags: html.CommonFlags})), extra)
+</html>
+`, css, string(markdown.ToHTML([]byte(md), parser.NewWithExtensions(parser.CommonExtensions|parser.AutoHeadingIDs), renderer)))
 
 	timestamp := time.Now().UnixNano()
 	filePath := fmt.Sprintf("assets/temp/html/%d.html", timestamp)
@@ -75,7 +74,7 @@ func MarkdownToPic(md string, c *fiber.Ctx) error {
 	var buf []byte
 	if err := chromedp.Run(ctx,
 		chromedp.Navigate("file://"+filepath),
-		chromedp.Screenshot("article.markdown-body", &buf, chromedp.NodeVisible),
+		chromedp.FullScreenshot(&buf, 100),
 	); err != nil {
 		return err
 	}
