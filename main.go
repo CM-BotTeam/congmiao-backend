@@ -18,7 +18,7 @@ import (
 func main() {
 	app := fiber.New()
 	registerRoutes(app)
-	err := app.Listen(":3000")
+	err := app.Listen(":5555")
 	if err != nil {
 		return
 	}
